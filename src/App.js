@@ -1,3 +1,4 @@
+import NewPlace from 'places/pages/NewPlace.';
 import UserPlaces from 'places/pages/UserPlaces';
 import React from 'react';
 import {BrowserRouter as 
@@ -18,6 +19,9 @@ const App = () =>
       </Route>
       <Route path = "/:userId/places">
         <UserPlaces/>
+      </Route>
+      <Route path="/places/new">
+        <NewPlace/>
       </Route>
       <Redirect to="/"/>
       </Switch>

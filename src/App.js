@@ -1,4 +1,4 @@
-import NewPlace from 'places/pages/NewPlace.';
+import NewPlace from 'places/pages/NewPlace';
 import UserPlaces from 'places/pages/UserPlaces';
 import React from 'react';
 import {BrowserRouter as 

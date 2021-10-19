@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router";
 import Button from "shared/components/FormElements/Button";
 import Input from "shared/components/FormElements/Input";
 import { useForm } from "shared/hooks/form-hook";
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "shared/util/validators";
 
-import './PlaceForm.css';
+import "./PlaceForm.css";
 const DUMMY_PLACES = [
   {
     id: "p1",
@@ -37,18 +37,36 @@ const DUMMY_PLACES = [
 
 const UpdatePlace = () => {
   const placeId = useParams().placeId;
+  const [formState, inputHandler, setFormData] = useForm(
+    {
+      title: {
+        value: "",
+        isValid: false,
+      },
+      description: {
+        value: "",
+        isValid: false,
+      },
+    },
+    false
+  );
 
   const placeIdentifier = DUMMY_PLACES.find((p) => p.id === placeId);
-  const[formState,inputHandler] = useForm({
-    title: {
-      value: placeIdentifier.title,
-      isValid: true
-    },
-    description: {
-      value: placeIdentifier.description,
-      isValid: true
-    }
-  },true);
+  useEffect(() => {
+    setFormData(
+      {
+        title: {
+          value: placeIdentifier.title,
+          isValid: true,
+        },
+        description: {
+          value: placeIdentifier.description,
+          isValid: true,
+        },
+      },
+      true
+    );
+  }, [setFormData, placeIdentifier]);
   if (!placeIdentifier)
     return (
       <div className="center">
@@ -56,10 +74,10 @@ const UpdatePlace = () => {
       </div>
     );
 
-  const submitHandler = e =>{
+  const submitHandler = (e) => {
     e.preventDefault();
     console.log(formState.inputs);
-  }
+  };
   return (
     <form className="place-form" onSubmit={submitHandler}>
       <Input
@@ -84,7 +102,7 @@ const UpdatePlace = () => {
         initialValid={formState.inputs.description.isValid}
       />
       <Button type="submit" disabled={!formState.isValid}>
-          Update Place
+        Update Place
       </Button>
     </form>
   );

@@ -19,13 +19,17 @@ const inputReducer = (state, action) => {
   }
 };
 
-const Input = (props) => {
+const Input = props => {
   const [inputState, dispatch] = useReducer(inputReducer, {
-    val: "",
-    isValid: false,
+    value: props.initialValue || "",
+    isValid: props.initialValid || false,
     isTouched: false,
   });
-
+  /* 
+    useReducer returns -> [The_new_state, setState(function)]
+    useReducer takes -> (reducer function which contains all the logic and how to change the state depending on specific inputs
+      , initial State)
+  */
   const { id, onInput } = props;
   const { value, isValid } = inputState;
   const callBack = () => onInput(id, value, isValid);
@@ -48,7 +52,7 @@ const Input = (props) => {
         type={props.type}
         placeholder={props.placeholder}
         onChange={changeHandler}
-        onBlur={touchHandler}
+        onBlur={touchHandler /*When focus is lost*/}
         value={value}
       />
     ) : (

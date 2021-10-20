@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import Button from "shared/components/FormElements/Button";
 import Input from "shared/components/FormElements/Input";
+import Card from "shared/components/UIElements/Card";
 import { useForm } from "shared/hooks/form-hook";
 import { VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "shared/util/validators";
 
@@ -37,6 +38,7 @@ const DUMMY_PLACES = [
 
 const UpdatePlace = () => {
   const placeId = useParams().placeId;
+  const [isLoading, setLoading] = useState(true);
   const [formState, inputHandler, setFormData] = useForm(
     {
       title: {
@@ -53,6 +55,7 @@ const UpdatePlace = () => {
 
   const placeIdentifier = DUMMY_PLACES.find((p) => p.id === placeId);
   useEffect(() => {
+    if (!placeIdentifier) return;
     setFormData(
       {
         title: {
@@ -66,11 +69,14 @@ const UpdatePlace = () => {
       },
       true
     );
+    setLoading(false);
   }, [setFormData, placeIdentifier]);
   if (!placeIdentifier)
     return (
       <div className="center">
-        <h2>could not find place</h2>
+        <Card>
+          <h2>could not find place</h2>
+        </Card>
       </div>
     );
 
@@ -78,7 +84,11 @@ const UpdatePlace = () => {
     e.preventDefault();
     console.log(formState.inputs);
   };
-  return (
+  return isLoading ? (
+    <div className="center">
+      <h2>Loading...</h2>
+    </div>
+  ) : (
     <form className="place-form" onSubmit={submitHandler}>
       <Input
         id="title"

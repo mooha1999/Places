@@ -8,6 +8,7 @@ import {BrowserRouter as
   Redirect,
   Switch
   } from 'react-router-dom';
+import Auth from 'user/pages/Auth';
 import MainNavigation from './shared/components/Navigation/MainNavigation';
 import Users from './user/pages/Users';
 const App = () => 
@@ -26,6 +27,9 @@ const App = () =>
       </Route>
       <Route path="/places/:placeId">
         <UpdatePlace/>
+      </Route>
+      <Route path="/auth">
+        <Auth/>
       </Route>
       <Redirect to="/"/>
       </Switch>

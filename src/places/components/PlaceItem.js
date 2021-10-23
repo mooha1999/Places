@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import Card from "shared/components/UIElements/Card";
 import Button from "shared/components/FormElements/Button";
 import Modal from "shared/components/UIElements/Modal";
 import "./PlaceItem.css";
+import { AuthContext } from "shared/context/auth-context";
 
 const PlaceItem = (props) => {
+  //States
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal,setConfirmModal] = useState(false); 
-  
+  //Handlers
   const openMapHanlder = () => setShowMap(true);
   const closeMapHanlder = () => setShowMap(false);
   const showConfirmModalHandler = () => setConfirmModal(true);
@@ -16,11 +18,14 @@ const PlaceItem = (props) => {
   const confirmDeleteHandler = () => {
     cancelConfirmModalHandler();
     console.log('Deleting');}
-
+  //Modal
   const warningModalFooter = <React.Fragment>
     <Button inverse onClick={cancelConfirmModalHandler}>Cancel</Button>
     <Button danger onClick={confirmDeleteHandler}>Delete</Button>
   </React.Fragment>
+  //Context
+  const auth = useContext(AuthContext);
+
   return (
     <React.Fragment>
       <Modal 
@@ -56,8 +61,10 @@ const PlaceItem = (props) => {
           </div>
           <div className="place-item__actions">
             <Button inverse onClick={openMapHanlder}>VIEW ON MAP</Button>
-            <Button to={`/places/${props.id}`}>EDIT</Button>
-            <Button danger onClick={showConfirmModalHandler}>DELETE</Button>
+            {auth.isLoggedIn && <Button to={`/places/${props.id}`}>EDIT</Button>}
+            {auth.isLoggedIn && 
+              <Button danger onClick={showConfirmModalHandler}>DELETE</Button>
+            }
           </div>
         </Card>
       </li>

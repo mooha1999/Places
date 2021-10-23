@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "shared/components/FormElements/Button";
 import Input from "shared/components/FormElements/Input";
 import Card from "shared/components/UIElements/Card";
 import { useForm } from "shared/hooks/form-hook";
-import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH } from "shared/util/validators";
+import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "shared/util/validators";
 
 import "./Auth.css";
 
 const Auth = () => {
-  const [formState, inputHandler] = useForm({
+  //States
+  const [isLogin, setLogin] = useState(true);
+  const [formState, inputHandler, setFormData] = useForm({
     email: {
       value: '',
       isValid: false
@@ -18,15 +20,45 @@ const Auth = () => {
       isValid: false
     }
   }, false);
+
+  //Handlers
   const authSubmitHandler = e => {
     e.preventDefault();
     console.log(formState.inputs);
   }
+  const switchHandler = () => {
+    if (!isLogin) {
+      setFormData({
+        ...formState.inputs,
+        name: undefined
+      }, formState.inputs.email.isValid && formState.inputs.password.isValid)
+    } else {
+      setFormData({
+        ...formState.inputs,
+        name: {
+          value: '',
+          isValid: false
+        }
+      }, false);
+    }
+    setLogin(prevState => !prevState);
+  }
   return (
     <Card className="authentication">
-      <h2>Login</h2>
+      <h2>{isLogin ? 'Login' : 'Sign up'}</h2>
       <hr />
-      <form onSubmit = {authSubmitHandler}>
+      <form onSubmit={authSubmitHandler}>
+        {!isLogin &&
+          <Input
+            element="input"
+            id="name"
+            type="text"
+            label="Name"
+            validators={[VALIDATOR_REQUIRE()]}
+            errorText="Please provid a name."
+            onInput={inputHandler}
+          />
+        }
         <Input
           element="input"
           id="email"
@@ -52,6 +84,12 @@ const Auth = () => {
           Login
         </Button>
       </form>
+      <Button
+        inverse
+        onClick={switchHandler}
+      >
+        {`Switch to ${isLogin ? 'Sign up' : 'Login'}`}
+      </Button>
     </Card>
   );
 };

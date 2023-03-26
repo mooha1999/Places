@@ -69,8 +69,6 @@ class PlacesController {
       await user.save({ session: sess });
       await sess.commitTransaction(); //Here all the operations are saved
       sess.endSession();
-
-      sess.endSession();
     } catch (err) {
       return next(new HttpError(err, 500));
 
